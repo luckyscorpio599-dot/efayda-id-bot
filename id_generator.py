@@ -1,10 +1,21 @@
+import os
 from PIL import Image, ImageDraw, ImageFont
 from template_base64 import TEMPLATE_PATH
 
-FONT_PATH = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+# Get the current directory of this script
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
-font_large = ImageFont.truetype(FONT_PATH, 36)
-font_medium = ImageFont.truetype(FONT_PATH, 28)
+# Point to the font.ttf file you uploaded to GitHub
+FONT_PATH = os.path.join(base_dir, "font.ttf")
+
+# Load fonts with a fallback in case the file is missing
+try:
+    font_large = ImageFont.truetype(FONT_PATH, 36)
+    font_medium = ImageFont.truetype(FONT_PATH, 28)
+except OSError:
+    print("Warning: font.ttf not found, using default font.")
+    font_large = ImageFont.load_default()
+    font_medium = ImageFont.load_default()
 
 def generate_id_image(data, photo, qr, barcode):
     template = Image.open(TEMPLATE_PATH).convert("RGBA")
