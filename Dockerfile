@@ -1,16 +1,21 @@
-# Use Python 3.11 slim image
 FROM python:3.11-slim
 
-# Set working directory
+# Install system dependencies (including Poppler)
+RUN apt-get update && apt-get install -y \
+    poppler-utils \
+    ffmpeg \
+    libsm6 \
+    libxext6 \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copy all files
+# Copy and install Python requirements
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of your code
 COPY . .
 
-# Upgrade pip
-RUN pip install --upgrade pip
-
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-# Run the bot
+# Start the bot
 CMD ["python", "main.py"]
