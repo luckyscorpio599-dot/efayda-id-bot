@@ -1,9 +1,12 @@
 import os
+import base64
 
-# Get the current directory where the script is running
+# 1. Get the current directory
 base_dir = os.path.dirname(os.path.abspath(__file__))
-# Point to the template.png inside your project folder
-template_image_path = os.path.join(base_dir, "template.png")
+# 2. Join it with the filename
+TEMPLATE_PATH = os.path.join(base_dir, "template.png")
 
-with open(template_image_path, "rb") as f:
-    # ... your existing code to convert to base64 ...
+# 3. Open and read the file (Notice the spaces below!)
+with open(TEMPLATE_PATH, "rb") as f:
+    template_data = f.read()  # This line MUST have 4 spaces before it
+    TEMPLATE_BASE64 = base64.b64encode(template_data).decode('utf-8') # This one too
