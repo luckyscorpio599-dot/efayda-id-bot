@@ -21,22 +21,32 @@ def generate_id_image(data, photo, qr, barcode):
     template = Image.open(TEMPLATE_PATH).convert("RGBA")
     draw = ImageDraw.Draw(template)
 
-    # TEXT positions — adjust to your template
-    draw.text((330, 280), data["full_name_en"], font=font_large, fill="black")
-    draw.text((330, 350), data["dob"], font=font_medium, fill="black")
-    draw.text((330, 420), data["sex"], font=font_medium, fill="black")
-    draw.text((330, 500), data["fan"], font=font_medium, fill="black")
-    draw.text((330, 570), data["fin"], font=font_medium, fill="black")
-    draw.text((200, 650), data["phone"], font=font_medium, fill="black")
-    draw.text((200, 680), data["region"], font=font_medium, fill="black")
-    draw.text((200, 710), data["zone"], font=font_medium, fill="black")
-    draw.text((200, 740), data["woreda"], font=font_medium, fill="black")
-    draw.text((850, 680), data["serial"], font=font_medium, fill="black")
+    # --- 1. RESIZE IMAGES TO FIT BOXES ---
+    # Adjust these sizes if they look too small/large on your phone
+    photo = photo.resize((240, 300))      # Height/Width for the portrait
+    qr = qr.resize((160, 160))           # Square for QR
+    barcode = barcode.resize((380, 70))  # Long/Thin for Barcode
 
-    # IMAGE placement
-    template.paste(photo, (100, 250))
-    template.paste(qr, (900, 350))
-    template.paste(barcode, (300, 750))
+    # --- 2. TEXT POSITIONS (Adjusted for your template) ---
+    # We increased the Y (second number) to move text down
+    draw.text((330, 310), data["full_name_en"], font=font_large, fill="black")
+    draw.text((330, 380), data["dob"], font=font_medium, fill="black")
+    draw.text((330, 450), data["sex"], font=font_medium, fill="black")
+    draw.text((330, 520), data["fan"], font=font_medium, fill="black")
+    draw.text((330, 590), data["fin"], font=font_medium, fill="black")
+    
+    # Address section
+    draw.text((200, 680), data["phone"], font=font_medium, fill="black")
+    draw.text((200, 710), data["region"], font=font_medium, fill="black")
+    draw.text((200, 740), data["zone"], font=font_medium, fill="black")
+    draw.text((200, 770), data["woreda"], font=font_medium, fill="black")
+    draw.text((850, 710), data["serial"], font=font_medium, fill="black")
+
+    # --- 3. IMAGE PLACEMENT ---
+    # Moved Y coordinates down to prevent overlapping the header
+    template.paste(photo, (70, 300))     # Moved photo down and left
+    template.paste(qr, (880, 380))       # Moved QR to the right side
+    template.paste(barcode, (350, 830))  # Moved barcode to bottom center
 
     output = "final_id.png"
     template.save(output)
